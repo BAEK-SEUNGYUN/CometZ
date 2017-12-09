@@ -165,12 +165,15 @@ class Game():
                 
                 if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                     if self.mode.press() == 2:
+                        self.modeBack = 0
                         self.gameState = "game_Normal"
                         self.modeBack = 0
                     elif self.mode.press() == 1:
+                        self.modeBack = 1
                         self.gameState = "game_Hard"
                         self.modeBack = 1
                     elif self.mode.press() == 0:
+                        self.modeBack = 2
                         self.gameState ="game_Hell"
                         self.modeBack = 2
                     else:
@@ -317,8 +320,7 @@ class Game():
         
         # Game ===============================================================
         elif self.gameState == "game_Normal":
-            modeBack = 0
-            print(1)
+            self.modeBack = 0
             if event.type == QUIT:
                         pygame.quit()
                         sys.exit()
@@ -333,8 +335,7 @@ class Game():
                     self.gameState = "pause"
               
         elif self.gameState == "game_Hard":
-            modeBack = 1
-            print(1)
+            self.modeBack = 1
             if event.type == QUIT:
                         pygame.quit()
                         sys.exit()
@@ -349,8 +350,7 @@ class Game():
                     self.gameState = "pause"
                     
         elif self.gameState == "game_Hell":
-            modeBack = 2
-            print(1)
+            self.modeBack = 2
             if event.type == QUIT:
                         pygame.quit()
                         sys.exit()
@@ -375,16 +375,16 @@ class Game():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     self.__init__()
-                    if modeBack == 0:
+                    if self.modeBack == 0:
                         self.gameState = "game_Normal"
-                    elif modeBack == 1:
+                    elif self.modeBack == 1:
                         self.gameState = "game_Hard"
-                    elif modeBack == 2:
+                    elif self.modeBack == 2:
                         self.gameState = "game_Hell"
                         
                 elif event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
+                    self.__init__()
+                    self.gameState = "menu"
 
         else:
             pass # throw exception!  
@@ -475,7 +475,7 @@ class Game():
         
         # Game ===============================================================
         if self.gameState == "game_Normal":
-        
+            self.modeBack = 0
             # Spawning ====================================================
 
             # Spawn X001 enemy ships at random in a random y position
@@ -600,7 +600,7 @@ class Game():
                 self.gameState = "gameOver"     # change state to gameOver
 
         elif self.gameState == "game_Hard":
-        
+            self.modeBack = 1
             # Spawning ====================================================
 
             # Spawn X001 enemy ships at random in a random y position
@@ -630,12 +630,7 @@ class Game():
                 enemyObj.yInitial = randint(0, WINDOW_HEIGHT - enemyObj.rect.height)
                 enemyObj.rect.y   =  enemyObj.yInitial
                 self.aiSprites.add(enemyObj)
-            if randint(1,70) == 1:
-                # create temporary instance so we can grab the height of the sprite
-                enemyObj = EnemyShipX004(WINDOW_WIDTH, 0,-6)
-                # random y position on the screen
-                enemyObj.rect.y = randint(0, WINDOW_HEIGHT - enemyObj.rect.height)
-                self.aiSprites.add(enemyObj)
+           
             # Movement ====================================================
             # Move enemy ships forward according to their speed
             for enemy in self.aiSprites:
@@ -710,7 +705,7 @@ class Game():
                 # if there was a collision
                 if userHit:
                     self.aiSprites.remove(enemy) # remove object
-                    self.userShip.shield -= 25
+                    self.userShip.shield -= 50  
                     self.score = self.score + enemy.score # add to score
                     self.explodeSnd.play()
                     
@@ -731,12 +726,12 @@ class Game():
                 self.gameState = "gameOver"     # change state to gameOver
 
         elif self.gameState == "game_Hell":
-        
+            self.modeBack = 2
             # Spawning ====================================================
 
             # Spawn X001 enemy ships at random in a random y position
             # Probability: 1 in 60 per frame.
-            if randint(1,30) == 1:
+            if randint(1,20) == 1:
                 # create temporary instance so we can grab the height of the sprite
                 enemyObj = EnemyShipX001(WINDOW_WIDTH, 0,-6)
                 # random y position on the screen
@@ -745,7 +740,7 @@ class Game():
             
             # Spawn X002 enemy ships at random in a random y position
             # Probability: 1 in 120 per frame. 
-            if randint(1,30) == 1:
+            if randint(1,20) == 1:
                 # create temporary instance so we can grab the height of the sprite
                 enemyObj = EnemyShipX002(WINDOW_WIDTH, 0,-4)
                 # random y position on the screen
@@ -754,7 +749,7 @@ class Game():
 
             # Spawn X003 enemy ships at random in a random y position
             # Probability: 1 in 120 per frame. 
-            if randint(1,30) == 1:
+            if randint(1,20) == 1:
                 # create temporary instance so we can grab the height of the sprite
                 enemyObj = EnemyShipX003(WINDOW_WIDTH, 0,-4)
                 # random y position on the screen
@@ -839,7 +834,7 @@ class Game():
                 # if there was a collision
                 if userHit:
                     self.aiSprites.remove(enemy) # remove object
-                    self.userShip.shield -= 25
+                    self.userShip.shield -= 100
                     self.score = self.score + enemy.score # add to score
                     self.explodeSnd.play()
                     
@@ -997,7 +992,7 @@ class Game():
             font80      = pygame.font.SysFont("Arial", 80)
             font30      = pygame.font.SysFont("Arial", 30)
             gameOverTxt = font80.render("Game Over!", True, WHITE)
-            continueTxt = font30.render("(Press Enter to restart, Escape to exit)", True, WHITE)
+            continueTxt = font30.render("(Press Enter to restart, go to menu ESC)", True, WHITE)
             
             screen.blit(gameOverTxt, [WINDOW_WIDTH/2-gameOverTxt.get_width()/2, 
                         WINDOW_HEIGHT/2-gameOverTxt.get_height()/2])
