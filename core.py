@@ -79,6 +79,8 @@ class Game():
         
         # creating user ship
         self.userShip = ShipY001()
+        #self.userShip = ShipY002()
+        #self.userShip = ShipY003()
         self.userShip.speed = 10
    
         # group of all sprites
@@ -90,7 +92,10 @@ class Game():
         
         # add to groups
         self.userSprites.add(self.userShip)
-        
+
+        # Creating player choice
+        self.choice = Menu(["Green", "Yellow", "Blue"], self.backg)
+                
         # Creating main menu
         self.menu = Menu(["Quit","Credits","Volume","Play"],self.backg)
 
@@ -133,7 +138,7 @@ class Game():
             if event.type == pygame.KEYDOWN: 
                 if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                     if self.menu.press() == 3:     # play pressed
-                        self.gameState = "mode"    # show mode
+                        self.gameState = "choice"    # show choice
                         wasPressedNow = 1
                     elif self.menu.press() == 2:   # volume pressed
                         self.gameState = "volume"  # show volume menu
@@ -176,6 +181,27 @@ class Game():
                         self.modeBack = 2
                         self.gameState ="game_Hell"
                         self.modeBack = 2
+                    else:
+                        pass
+                if event.key == pygame.K_DOWN:
+                    self.mode.down()
+                if event.key == pygame.K_UP:
+                    self.mode.up()
+        #  choice===================================================================
+        if self.gameState == "choice" and wasPressedNow == 0:
+            
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                
+                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                    if self.mode.press() == 2:
+                        self.gameState = "mode"
+                    elif self.mode.press() == 1:
+                        self.gameState = "mode"
+                    elif self.mode.press() == 0:
+                        self.gameState ="mode"
                     else:
                         pass
                 if event.key == pygame.K_DOWN:
@@ -873,7 +899,9 @@ class Game():
         # Pause ==============================================================
         if self.gameState == "pause":
             self.pause.draw(screen)
-        # ====================================================================
+        # Choice================================================================
+        if self.gameState == "choice":
+            self.choice.draw(screen)
         
         # Volume =============================================================
         if self.gameState == "volume":
