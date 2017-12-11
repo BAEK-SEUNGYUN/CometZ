@@ -29,7 +29,7 @@ from constants   import *
 from spriteTools import SpriteSheet
 from random      import randint
 from math        import cos
-
+from core        import *
 
 class EnemyShip(pygame.sprite.Sprite):
     """
@@ -100,6 +100,7 @@ class EnemyShipX001(EnemyShip):
         self.rect = self.image.get_rect()
 
         # Initial values --------------
+     
         self.rect.x    = x
         self.rect.y    = y
         self.direction = "right"
