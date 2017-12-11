@@ -78,11 +78,12 @@ class Game():
         pygame.mixer.music.set_volume(volume["music"]/100.)
         
         # creating user ship
-        self.userShip = ShipY001()
-        #self.userShip = ShipY002()
-        #self.userShip = ShipY003()
-        self.userShip.speed = 10
-   
+        self.userShip1 = ShipY001()
+        self.userShip2 = ShipY002()
+        self.userShip3 = ShipY003()
+        self.userShip1.speed = 10
+        self.userShip2.speed = 15
+        self.userShip3.speed = 20
         # group of all sprites
         self.userSprites    = pygame.sprite.Group()
         self.laserSprites   = pygame.sprite.Group()
@@ -91,11 +92,10 @@ class Game():
         
         
         # add to groups
-        self.userSprites.add(self.userShip)
+        self.userSprites.add(self.userShip1)
+        self.userSprites.add(self.userShip2)
+        self.userSprites.add(self.userShip3)
 
-        # Creating player choice
-        self.choice = Menu(["Green", "Yellow", "Blue"], self.backg)
-                
         # Creating main menu
         self.menu = Menu(["Quit","Credits","Volume","Play"],self.backg)
 
@@ -138,7 +138,7 @@ class Game():
             if event.type == pygame.KEYDOWN: 
                 if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                     if self.menu.press() == 3:     # play pressed
-                        self.gameState = "choice"    # show choice
+                        self.gameState = "mode"    # show mode
                         wasPressedNow = 1
                     elif self.menu.press() == 2:   # volume pressed
                         self.gameState = "volume"  # show volume menu
@@ -171,37 +171,14 @@ class Game():
                 if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                     if self.mode.press() == 2:
                         self.modeBack = 0
+                        print(self.modeBack)
                         self.gameState = "game_Normal"
-                        self.modeBack = 0
                     elif self.mode.press() == 1:
                         self.modeBack = 1
                         self.gameState = "game_Hard"
-                        self.modeBack = 1
                     elif self.mode.press() == 0:
                         self.modeBack = 2
                         self.gameState ="game_Hell"
-                        self.modeBack = 2
-                    else:
-                        pass
-                if event.key == pygame.K_DOWN:
-                    self.mode.down()
-                if event.key == pygame.K_UP:
-                    self.mode.up()
-        #  choice===================================================================
-        if self.gameState == "choice" and wasPressedNow == 0:
-            
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                
-                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
-                    if self.mode.press() == 2:
-                        self.gameState = "mode"
-                    elif self.mode.press() == 1:
-                        self.gameState = "mode"
-                    elif self.mode.press() == 0:
-                        self.gameState ="mode"
                     else:
                         pass
                 if event.key == pygame.K_DOWN:
@@ -353,8 +330,8 @@ class Game():
             # only on KEYDOWN event
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    x = self.userShip.rect.x
-                    y = self.userShip.rect.y
+                    x = self.userShip1.rect.x
+                    y = self.userShip1.rect.y
                     self.laserSprites.add(Laser(x+12,y+28))
                     self.laserSnd.play()
                 elif event.key == pygame.K_ESCAPE:
@@ -368,8 +345,8 @@ class Game():
             # only on KEYDOWN event
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    x = self.userShip.rect.x
-                    y = self.userShip.rect.y
+                    x = self.userShip2.rect.x
+                    y = self.userShip2.rect.y
                     self.laserSprites.add(Laser(x+12,y+28))
                     self.laserSnd.play()
                 elif event.key == pygame.K_ESCAPE:
@@ -383,8 +360,8 @@ class Game():
             # only on KEYDOWN event
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    x = self.userShip.rect.x
-                    y = self.userShip.rect.y
+                    x = self.userShip3.rect.x
+                    y = self.userShip3.rect.y
                     self.laserSprites.add(Laser(x+12,y+28))
                     self.laserSnd.play()
                 elif event.key == pygame.K_ESCAPE:
@@ -394,18 +371,22 @@ class Game():
         # Game Over ==========================================================
 
         elif self.gameState == "gameOver":
+            print(self.modeBack)
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
             # only on KEYDOWN event - restart game with return or quit with escape
             if event.type == pygame.KEYDOWN:
+                print(self.modeBack)
                 if event.key == pygame.K_RETURN:
-                    self.__init__()
                     if self.modeBack == 0:
+                        self.__init__()
                         self.gameState = "game_Normal"
                     elif self.modeBack == 1:
+                        self.__init__()
                         self.gameState = "game_Hard"
                     elif self.modeBack == 2:
+                        self.__init__()
                         self.gameState = "game_Hell"
                         
                 elif event.key == pygame.K_ESCAPE:
@@ -420,61 +401,61 @@ class Game():
         #  Game ==============================================================
     
         if self.gameState == "game_Normal":
-        
+            self.modeBack = 0
             if keys[pygame.K_UP]:
-                if self.userShip.rect.y >= 0: 
+                if self.userShip1.rect.y >= 0: 
                     # prevent sprite from leaving window
-                    self.userShip.up()
+                    self.userShip1.up()
             if keys[pygame.K_DOWN]:
-                if self.userShip.rect.y + self.userShip.rect.height <= WINDOW_HEIGHT: 
+                if self.userShip1.rect.y + self.userShip1.rect.height <= WINDOW_HEIGHT: 
                     # prevent sprite from leaving window
-                    self.userShip.down()
+                    self.userShip1.down()
             if keys[pygame.K_LEFT]:
-                if self.userShip.rect.x >= 0:
+                if self.userShip1.rect.x >= 0:
                     # prevent sprite from leaving window                    
-                    self.userShip.left()
+                    self.userShip1.left()
             if keys[pygame.K_RIGHT]:
-                if self.userShip.rect.x + self.userShip.rect.width <= WINDOW_WIDTH:
+                if self.userShip1.rect.x + self.userShip1.rect.width <= WINDOW_WIDTH:
                     # prevent sprite from leaving window
-                    self.userShip.right()
+                    self.userShip1.right()
     
         elif self.gameState == "game_Hard":
-        
+            self.modeBack = 1
             if keys[pygame.K_UP]:
-                if self.userShip.rect.y >= 0: 
+                if self.userShip2.rect.y >= 0: 
                     # prevent sprite from leaving window
-                    self.userShip.up()
+                    self.userShip2.up()
             if keys[pygame.K_DOWN]:
-                if self.userShip.rect.y + self.userShip.rect.height <= WINDOW_HEIGHT: 
+                if self.userShip2.rect.y + self.userShip2.rect.height <= WINDOW_HEIGHT: 
                     # prevent sprite from leaving window
-                    self.userShip.down()
+                    self.userShip2.down()
             if keys[pygame.K_LEFT]:
-                if self.userShip.rect.x >= 0:
+                if self.userShip2.rect.x >= 0:
                     # prevent sprite from leaving window                    
-                    self.userShip.left()
+                    self.userShip2.left()
             if keys[pygame.K_RIGHT]:
-                if self.userShip.rect.x + self.userShip.rect.width <= WINDOW_WIDTH:
+                if self.userShip2.rect.x + self.userShip2.rect.width <= WINDOW_WIDTH:
                     # prevent sprite from leaving window
-                    self.userShip.right()
+                    self.userShip2.right()
     
         elif self.gameState == "game_Hell":
-        
+            self.modeBack = 2
             if keys[pygame.K_UP]:
-                if self.userShip.rect.y >= 0: 
+                if self.userShip3.rect.y >= 0: 
                     # prevent sprite from leaving window
-                    self.userShip.up()
+                    self.userShip3.up()
             if keys[pygame.K_DOWN]:
-                if self.userShip.rect.y + self.userShip.rect.height <= WINDOW_HEIGHT: 
+                if self.userShip3.rect.y + self.userShip3.rect.height <= WINDOW_HEIGHT: 
                     # prevent sprite from leaving window
-                    self.userShip.down()
+                    self.userShip3.down()
             if keys[pygame.K_LEFT]:
-                if self.userShip.rect.x >= 0:
+                if self.userShip3.rect.x >= 0:
                     # prevent sprite from leaving window                    
-                    self.userShip.left()
+                    self.userShip3.left()
             if keys[pygame.K_RIGHT]:
-                if self.userShip.rect.x + self.userShip.rect.width <= WINDOW_WIDTH:
+                if self.userShip3.rect.x + self.userShip3.rect.width <= WINDOW_WIDTH:
                     # prevent sprite from leaving window
-                    self.userShip.right()
+                    self.userShip3.right()
         #  ===================================================================
 
     def update(self):
@@ -605,7 +586,7 @@ class Game():
                 # if there was a collision
                 if userHit:
                     self.aiSprites.remove(enemy) # remove object
-                    self.userShip.shield -= 25
+                    self.userShip1.shield -= 25
                     self.score = self.score + enemy.score # add to score
                     self.explodeSnd.play()
                     
@@ -616,13 +597,14 @@ class Game():
                 # if there was a collision
                 if userHit:
                     self.powerUpSprites.remove(powerUp) # remove object
-                    powerUp.pickUp(self.userShip)
+                    powerUp.pickUp(self.userShip1)
                     self.powerUpSnd.play()                # no sound yet!!
             # =============================================================
                     
             # if user is dead
-            if self.userShip.shield <= 0:
-                self.userShip.shield = 0        # round shield to 0
+            if self.userShip1.shield <= 0:
+                self.userShip1.shield = 0        # round shield to 0
+                self.modeBack = 0
                 self.gameState = "gameOver"     # change state to gameOver
 
         elif self.gameState == "game_Hard":
@@ -731,7 +713,7 @@ class Game():
                 # if there was a collision
                 if userHit:
                     self.aiSprites.remove(enemy) # remove object
-                    self.userShip.shield -= 50  
+                    self.userShip2.shield -= 50  
                     self.score = self.score + enemy.score # add to score
                     self.explodeSnd.play()
                     
@@ -742,13 +724,14 @@ class Game():
                 # if there was a collision
                 if userHit:
                     self.powerUpSprites.remove(powerUp) # remove object
-                    powerUp.pickUp(self.userShip)
+                    powerUp.pickUp(self.userShip2)
                     self.powerUpSnd.play()                # no sound yet!!
             # =============================================================
                     
             # if user is dead
-            if self.userShip.shield <= 0:
-                self.userShip.shield = 0        # round shield to 0
+            if self.userShip2.shield <= 0:
+                self.userShip2.shield = 0        # round shield to 0
+                self.modeBack = 1
                 self.gameState = "gameOver"     # change state to gameOver
 
         elif self.gameState == "game_Hell":
@@ -860,7 +843,7 @@ class Game():
                 # if there was a collision
                 if userHit:
                     self.aiSprites.remove(enemy) # remove object
-                    self.userShip.shield -= 100
+                    self.userShip3.shield -= 100
                     self.score = self.score + enemy.score # add to score
                     self.explodeSnd.play()
                     
@@ -871,13 +854,14 @@ class Game():
                 # if there was a collision
                 if userHit:
                     self.powerUpSprites.remove(powerUp) # remove object
-                    powerUp.pickUp(self.userShip)
+                    powerUp.pickUp(self.userShip3)
                     self.powerUpSnd.play()                # no sound yet!!
             # =============================================================
                     
             # if user is dead
-            if self.userShip.shield <= 0:
-                self.userShip.shield = 0        # round shield to 0
+            if self.userShip3.shield <= 0:
+                self.userShip3.shield = 0        # round shield to 0
+                self.modeBack = 2
                 self.gameState = "gameOver"     # change state to gameOver            
         # ====================================================================
         
@@ -899,9 +883,6 @@ class Game():
         # Pause ==============================================================
         if self.gameState == "pause":
             self.pause.draw(screen)
-        # Choice================================================================
-        if self.gameState == "choice":
-            self.choice.draw(screen)
         
         # Volume =============================================================
         if self.gameState == "volume":
@@ -933,14 +914,14 @@ class Game():
             
             # drawing text
             font = pygame.font.SysFont("Arial", 25)
-            shieldTxt = font.render("Shield: " + str(self.userShip.shield), True, WHITE)
+            shieldTxt = font.render("Shield: " + str(self.userShip1.shield), True, WHITE)
             scoreTxt = font.render("Score: " + str(self.score), True, WHITE)
             screen.blit(shieldTxt, [0,0])
             screen.blit(scoreTxt,  [0,30])           
             
             # animations
             self.backg.scroll(1)          # update background
-            self.userShip.animate()       # update animation
+            self.userShip1.animate()       # update animation
             for enemy in self.aiSprites:
                 enemy.animate()       # update animation
             for powerUp in self.powerUpSprites:
@@ -965,14 +946,14 @@ class Game():
             
             # drawing text
             font = pygame.font.SysFont("Arial", 25)
-            shieldTxt = font.render("Shield: " + str(self.userShip.shield), True, WHITE)
+            shieldTxt = font.render("Shield: " + str(self.userShip2.shield), True, WHITE)
             scoreTxt = font.render("Score: " + str(self.score), True, WHITE)
             screen.blit(shieldTxt, [0,0])
             screen.blit(scoreTxt,  [0,30])           
             
             # animations
             self.backg.scroll(1)          # update background
-            self.userShip.animate()       # update animation
+            self.userShip1.animate()       # update animation
             for enemy in self.aiSprites:
                 enemy.animate()       # update animation
             for powerUp in self.powerUpSprites:
@@ -997,14 +978,14 @@ class Game():
             
             # drawing text
             font = pygame.font.SysFont("Arial", 25)
-            shieldTxt = font.render("Shield: " + str(self.userShip.shield), True, WHITE)
+            shieldTxt = font.render("Shield: " + str(self.userShip3.shield), True, WHITE)
             scoreTxt = font.render("Score: " + str(self.score), True, WHITE)
             screen.blit(shieldTxt, [0,0])
             screen.blit(scoreTxt,  [0,30])           
             
             # animations
             self.backg.scroll(1)          # update background
-            self.userShip.animate()       # update animation
+            self.userShip3.animate()       # update animation
             for enemy in self.aiSprites:
                 enemy.animate()       # update animation
             for powerUp in self.powerUpSprites:
