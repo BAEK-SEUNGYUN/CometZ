@@ -82,19 +82,21 @@ class Game():
         self.userShip2 = ShipY002()
         self.userShip3 = ShipY003()
         self.userShip1.speed = 10
-        self.userShip2.speed = 15
-        self.userShip3.speed = 20
+        self.userShip2.speed = 10
+        self.userShip3.speed = 10
         # group of all sprites
-        self.userSprites    = pygame.sprite.Group()
+        self.userSprites1    = pygame.sprite.Group()
+        self.userSprites2    = pygame.sprite.Group()
+        self.userSprites3    = pygame.sprite.Group()
         self.laserSprites   = pygame.sprite.Group()
         self.aiSprites      = pygame.sprite.Group()
         self.powerUpSprites = pygame.sprite.Group()
         
         
         # add to groups
-        self.userSprites.add(self.userShip1)
-        self.userSprites.add(self.userShip2)
-        self.userSprites.add(self.userShip3)
+        self.userSprites1.add(self.userShip1)
+        self.userSprites2.add(self.userShip2)
+        self.userSprites3.add(self.userShip3)
 
         # Creating main menu
         self.menu = Menu(["Quit","Credits","Volume","Play"],self.backg)
@@ -371,13 +373,11 @@ class Game():
         # Game Over ==========================================================
 
         elif self.gameState == "gameOver":
-            print(self.modeBack)
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
             # only on KEYDOWN event - restart game with return or quit with escape
             if event.type == pygame.KEYDOWN:
-                print(self.modeBack)
                 if event.key == pygame.K_RETURN:
                     if self.modeBack == 0:
                         self.__init__()
@@ -580,7 +580,7 @@ class Game():
             
             # check for collisions between enemyShips and the user
             for enemy in self.aiSprites:
-                userHit = pygame.sprite.spritecollide(enemy,self.userSprites,False,
+                userHit = pygame.sprite.spritecollide(enemy,self.userSprites1,False,
                                                       pygame.sprite.collide_mask)
                 
                 # if there was a collision
@@ -592,7 +592,7 @@ class Game():
                     
             # check for collisions between powerUps and the user
             for powerUp in self.powerUpSprites:
-                userHit = pygame.sprite.spritecollide(powerUp,self.userSprites,False)
+                userHit = pygame.sprite.spritecollide(powerUp,self.userSprites1,False)
                 
                 # if there was a collision
                 if userHit:
@@ -707,7 +707,7 @@ class Game():
             
             # check for collisions between enemyShips and the user
             for enemy in self.aiSprites:
-                userHit = pygame.sprite.spritecollide(enemy,self.userSprites,False,
+                userHit = pygame.sprite.spritecollide(enemy,self.userSprites2,False,
                                                       pygame.sprite.collide_mask)
                 
                 # if there was a collision
@@ -719,7 +719,7 @@ class Game():
                     
             # check for collisions between powerUps and the user
             for powerUp in self.powerUpSprites:
-                userHit = pygame.sprite.spritecollide(powerUp,self.userSprites,False)
+                userHit = pygame.sprite.spritecollide(powerUp,self.userSprites2,False)
                 
                 # if there was a collision
                 if userHit:
@@ -837,7 +837,7 @@ class Game():
             
             # check for collisions between enemyShips and the user
             for enemy in self.aiSprites:
-                userHit = pygame.sprite.spritecollide(enemy,self.userSprites,False,
+                userHit = pygame.sprite.spritecollide(enemy,self.userSprites3,False,
                                                       pygame.sprite.collide_mask)
                 
                 # if there was a collision
@@ -849,7 +849,7 @@ class Game():
                     
             # check for collisions between powerUps and the user
             for powerUp in self.powerUpSprites:
-                userHit = pygame.sprite.spritecollide(powerUp,self.userSprites,False)
+                userHit = pygame.sprite.spritecollide(powerUp,self.userSprites3,False)
                 
                 # if there was a collision
                 if userHit:
@@ -906,7 +906,7 @@ class Game():
             screen.blit(self.backg.image,(self.backg.x + self.backg.width,self.backg.y))
                            
             # draw sprites onto the screen
-            self.userSprites.draw(screen)
+            self.userSprites1.draw(screen)
             self.laserSprites.draw(screen)
             self.aiSprites.draw(screen)
             self.powerUpSprites.draw(screen)
@@ -938,7 +938,7 @@ class Game():
             screen.blit(self.backg.image,(self.backg.x + self.backg.width,self.backg.y))
                            
             # draw sprites onto the screen
-            self.userSprites.draw(screen)
+            self.userSprites2.draw(screen)
             self.laserSprites.draw(screen)
             self.aiSprites.draw(screen)
             self.powerUpSprites.draw(screen)
@@ -953,7 +953,7 @@ class Game():
             
             # animations
             self.backg.scroll(1)          # update background
-            self.userShip1.animate()       # update animation
+            self.userShip2.animate()       # update animation
             for enemy in self.aiSprites:
                 enemy.animate()       # update animation
             for powerUp in self.powerUpSprites:
@@ -970,7 +970,7 @@ class Game():
             screen.blit(self.backg.image,(self.backg.x + self.backg.width,self.backg.y))
                            
             # draw sprites onto the screen
-            self.userSprites.draw(screen)
+            self.userSprites3.draw(screen)
             self.laserSprites.draw(screen)
             self.aiSprites.draw(screen)
             self.powerUpSprites.draw(screen)
